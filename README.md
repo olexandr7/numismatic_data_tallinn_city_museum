@@ -22,46 +22,50 @@
 
 📘 Filtering Rules Applied After Extraction
 
-To ensure only genuine coins remain, several filtering rules are applied.
+# 🔍 Filtering Rules Applied After Extraction
 
-1. Excluding Non-Coin Items Based on Title (Nimetus)
+To ensure the dataset contains only genuine numismatic coins, the following filtering rules are applied.
 
-The following Nimetus values identify non-coin items that look similar to coins (tokens, medals, game pieces, hotel money):
+## ❌ Excluded Nimetus (Object Names)
 
+These labels indicate tokens, medals, badges, hotel money, or other non-coin objects.  
+Filtered using exact, case-insensitive match:
+
+- rinnaleht
+- mängumärk
+- mängu märk
+- medal
+- ripats
+- žetoon
+- zetoon
+- vallimärk
+- spordiklubi zetoon
+- hotelli raha
+
+## ❌ Excluded Materials
+
+Objects made from non-coin materials:
+
+- paber
+- papp
+
+## 🧹 Final Filtering Code
+
+```python
+# Exclude by Nimetus (object name)
 exclude_nimetus = [
-    "rinnaleht",
-    "mängumärk",
-    "mängu märk",
-    "medal",
-    "ripats",
-    "žetoon",
-    "zetoon",
-    "vallimärk",
-    "spordiklubi zetoon",
-    "hotelli raha",
+    "rinnaleht", "mängumärk", "mängu märk", "medal", "ripats",
+    "žetoon", "zetoon", "vallimärk", "spordiklubi zetoon", "hotelli raha"
 ]
 
-
-Filtering logic:
-
-Nimetus is normalized via .strip().casefold()
-
-Exact match → row excluded
-
-This prevents contamination from non-numismatic objects.
-
-2. Excluding Non-Coin Materials
-
-Items made from the following materials are excluded:
-
+# Exclude by material
 exclude_materials = ["paber", "papp"]
 
+# Apply both filters
+df = df[
+    ~df["Nimetus"].str.strip().str.casefold().isin([x.casefold() for x in exclude_nimetus])
+    &
+    ~df["Materjal"].fillna("").str.strip().str.casefold().isin([x.casefold() for x in exclude_materials])
+]
 
-Why:
-
-Paper, cardboard → not coins
-
-Removes game money, printed tokens, cardboard checkers, etc.
-
-Filtering is applied using normalized Materjal.
 

@@ -17,7 +17,7 @@
 | **Tehnika**               | Manufacturing technique(s).                          | `<termMaterialsTech type="tehnika">`                                             | Skip hierarchical terms: keep only specific ones (usually 3rd+). Deduplicated, joined by `; `.                                                 |
 | **Materjal**              | Material(s) of the object.                           | `<termMaterialsTech type="materjal">`                                            | Keep last (most specific) term from each block. Deduplicated, joined by `; `.                                                                  |
 | **Mõõdud**                | Object measurements.                                 | `<measurementType>`, `<measurementValue>`, `<measurementUnit>`                   | If all present → `"Type Value Unit"`. Else use only the numeric value.                                                                         |
-| **Riik** | Country of use/payment (from the *maksevahendid* event). | First `<place politicalEntity="riik">/appellationValue` inside the event whose `eventType` contains `"maksevahendid"`. | Uses the first non-empty value, ignores `"[]"`. |
+| **Riik_maksevahendid** | Country of use/payment (from the *maksevahendid* event). | First `<place politicalEntity="riik">/appellationValue` inside the event whose `eventType` contains `"maksevahendid"`. | Uses the first non-empty value, ignores `"[]"`. |
 
 
 📘 Filtering Rules Applied After Extraction

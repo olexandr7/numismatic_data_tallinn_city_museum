@@ -17,27 +17,51 @@
 | **Tehnika**               | Manufacturing technique(s).                          | `<termMaterialsTech type="tehnika">`                                             | Skip hierarchical terms: keep only specific ones (usually 3rd+). Deduplicated, joined by `; `.                                                 |
 | **Materjal**              | Material(s) of the object.                           | `<termMaterialsTech type="materjal">`                                            | Keep last (most specific) term from each block. Deduplicated, joined by `; `.                                                                  |
 | **Mõõdud**                | Object measurements.                                 | `<measurementType>`, `<measurementValue>`, `<measurementUnit>`                   | If all present → `"Type Value Unit"`. Else use only the numeric value.                                                                         |
-
-Filtering Rules Applied After Extraction
-
-After DataFrame is built, the following rows are removed:
-
-1. Unwanted Nimetus values
-
-(Exact match after strip().casefold())
-
-rinnaleht
-mängumärk
-mängu märk
-medal
-ripats
-žetoon
-zetoon
-vallimärk
-spordiklubi zetoon
-hotelli raha
-
-2. Unwanted materials
-paber
-papp
 | **Riik**                  | Country associated with the event.                   | First `<place politicalEntity="riik">/appellationValue`                          | First non-empty value, ignoring `"[]"`.                                                                                                        |
+
+
+📘 Filtering Rules Applied After Extraction
+
+To ensure only genuine coins remain, several filtering rules are applied.
+
+1. Excluding Non-Coin Items Based on Title (Nimetus)
+
+The following Nimetus values identify non-coin items that look similar to coins (tokens, medals, game pieces, hotel money):
+
+exclude_nimetus = [
+    "rinnaleht",
+    "mängumärk",
+    "mängu märk",
+    "medal",
+    "ripats",
+    "žetoon",
+    "zetoon",
+    "vallimärk",
+    "spordiklubi zetoon",
+    "hotelli raha",
+]
+
+
+Filtering logic:
+
+Nimetus is normalized via .strip().casefold()
+
+Exact match → row excluded
+
+This prevents contamination from non-numismatic objects.
+
+2. Excluding Non-Coin Materials
+
+Items made from the following materials are excluded:
+
+exclude_materials = ["paber", "papp"]
+
+
+Why:
+
+Paper, cardboard → not coins
+
+Removes game money, printed tokens, cardboard checkers, etc.
+
+Filtering is applied using normalized Materjal.
+

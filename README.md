@@ -17,4 +17,27 @@
 | **Tehnika**               | Manufacturing technique(s).                          | `<termMaterialsTech type="tehnika">`                                             | Skip hierarchical terms: keep only specific ones (usually 3rd+). Deduplicated, joined by `; `.                                                 |
 | **Materjal**              | Material(s) of the object.                           | `<termMaterialsTech type="materjal">`                                            | Keep last (most specific) term from each block. Deduplicated, joined by `; `.                                                                  |
 | **Mõõdud**                | Object measurements.                                 | `<measurementType>`, `<measurementValue>`, `<measurementUnit>`                   | If all present → `"Type Value Unit"`. Else use only the numeric value.                                                                         |
+
+Filtering Rules Applied After Extraction
+
+After DataFrame is built, the following rows are removed:
+
+1. Unwanted Nimetus values
+
+(Exact match after strip().casefold())
+
+rinnaleht
+mängumärk
+mängu märk
+medal
+ripats
+žetoon
+zetoon
+vallimärk
+spordiklubi zetoon
+hotelli raha
+
+2. Unwanted materials
+paber
+papp
 | **Riik**                  | Country associated with the event.                   | First `<place politicalEntity="riik">/appellationValue`                          | First non-empty value, ignoring `"[]"`.                                                                                                        |
